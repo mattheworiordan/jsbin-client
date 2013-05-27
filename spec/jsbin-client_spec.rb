@@ -106,4 +106,47 @@ describe JsBinClient do
       a_request(:post, "#{stub_path}#{url_id}/save").with(:body => bin_params).should have_been_made.once
     end
   end
+
+  context '#url_for' do
+    subject { JsBinClient.new(host: 'localhost', port: 8080) }
+    let(:url_path) { "http://localhost:8080/" }
+    let(:url_id) { 'asdsad' }
+
+    it 'should return edit URL without revision by default' do
+      subject.url_for(url_id).should == "#{url_path}#{url_id}/latest/edit"
+    end
+
+    it 'should return edit URL with revision by default' do
+      subject.url_for(url_id, revision: 3).should == "#{url_path}#{url_id}/3/edit"
+    end
+
+    it 'should return preview URL without revision' do
+      subject.url_for(url_id, preview: true).should == "#{url_path}#{url_id}/latest"
+    end
+
+    it 'should return preview URL with revision' do
+      subject.url_for(url_id, preview: true, revision: 3).should == "#{url_path}#{url_id}/3"
+    end
+
+    it 'should return edit URL with panels with revision' do
+      subject.url_for(url_id, revision: 3, panels: 'javascript,html').should == "#{url_path}#{url_id}/3/edit#javascript,html"
+    end
+
+    it 'should return edit URL with panels from array' do
+      subject.url_for(url_id, panels: %w(javascript html)).should == "#{url_path}#{url_id}/latest/edit#javascript,html"
+    end
+
+    it 'should return embeddable URL with revision with panels' do
+      subject.url_for(url_id, embed: true, revision: 3, panels: %w(javascript live)).should == "#{url_path}#{url_id}/3/embed?javascript,live"
+    end
+
+    it 'should return embeddable URL' do
+      subject.url_for(url_id, embed: true).should == "#{url_path}#{url_id}/latest/embed"
+    end
+
+    it 'should support SSL' do
+      client = JsBinClient.new(host: 'jsbin.com', port: 443, ssl: true)
+      client.url_for(url_id, preview: true).should == "https://jsbin.com:443/#{url_id}/latest"
+    end
+  end
 end

@@ -28,4 +28,28 @@ class JsBinClient
   def create_revision(id, bin_params)
     @rest.post("#{id}/save", bin_params)
   end
+
+  # URL for JSBin
+  def url_for(id, options = {})
+    panels = options[:panels]
+    if options[:panels].kind_of?(Array)
+      panels = options[:panels].join(',')
+    end
+
+    url = "#{@options.ssl ? 'https' : 'http'}://#{@options.host}:#{@options.port}/#{id}"
+    url << if options[:revision]
+      "/#{options[:revision]}"
+    else
+      "/latest"
+    end
+    if options[:embed]
+      url << "/embed"
+      url << "?#{panels}" unless panels.nil?
+    elsif !options[:preview]
+      url << "/edit"
+      url << "##{panels}" unless panels.nil?
+    end
+
+    url
+  end
 end

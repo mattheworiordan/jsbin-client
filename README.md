@@ -1,6 +1,8 @@
 jsbin-client
 ============
 
+[![Build Status](https://travis-ci.org/mattheworiordan/jsbin-client.png)](https://travis-ci.org/mattheworiordan/jsbin-client)
+
 jsbin-client is a simple Ruby client for JSBin [http://jsbin.com/](http://jsbin.com/).  It provides basic CRUD methods to retrieve a bin, create a bin, and create a revision for an existing bin.
 
 The library supports anonymous or token authentication if required by the server.

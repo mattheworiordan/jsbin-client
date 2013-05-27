@@ -11,11 +11,11 @@ class JsBinClient
     end
 
     def put(path, params = {})
-      rest_request :put, "#{end_point}#{path}", headers
+      rest_request :put, "#{end_point}#{path}", params, headers
     end
 
     def post(path, params = {})
-      rest_request :post, "#{end_point}#{path}", headers
+      rest_request :post, "#{end_point}#{path}", params, headers
     end
 
     private

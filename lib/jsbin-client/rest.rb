@@ -20,7 +20,7 @@ class JsBinClient
 
     private
       def end_point
-        "#{@options.ssl? ? 'https' : 'http'}://#{@options.host}:#{@options.port}/#{API_PREFIX}"
+        "#{@options.ssl ? 'https' : 'http'}://#{@options.host}:#{@options.port}/#{API_PREFIX}"
       end
 
       def headers

@@ -9,19 +9,26 @@ describe 'JsBinClient::Rest' do
 
   context 'should use the options' do
     before { stub_request(:get, url).to_return(status: 200, body: '{"response":"valid"}') }
-    after { a_request(:get, url).with(:headers => {'authorization' => 'token 3'}).should have_been_made.once }
 
     specify do
       subject.get(bin_id)['response'].should == 'valid'
+      a_request(:get, url).with(:headers => {'authorization' => 'token 3'}).should have_been_made.once
     end
 
-    it 'over SSL' do
-      options.ssl = true
-      subject.get(bin_id)['response'].should == 'valid'
+    context 'over SSL' do
+      before { stub_request(:get, url).to_return(status: 200, body: '{"response":"valid"}') }
+      let(:options) { OpenStruct.new({ host: 'host', port: 443, ssl: true, api_key: '5' }) }
+      let(:url) { "https://host:443/api/#{bin_id}" }
+
+      specify do
+        subject.get(bin_id)['response'].should == 'valid'
+        a_request(:get, url).with(:headers => {'authorization' => 'token 5'}).should have_been_made.once
+      end
     end
 
     it 'and return indifferent JSON' do
       subject.get(bin_id)[:response].should == 'valid'
+      a_request(:get, url).with(:headers => {'authorization' => 'token 3'}).should have_been_made.once
     end
   end
 
